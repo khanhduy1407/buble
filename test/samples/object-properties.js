@@ -48,7 +48,8 @@ module.exports = [
 	},
 
 	{
-		description: 'transpiles shorthand methods with numeric or string names (#139)',
+		description:
+			'transpiles shorthand methods with numeric or string names (#139)',
 
 		input: `
 			obj = {
@@ -78,14 +79,16 @@ module.exports = [
 	},
 
 	{
-		description: 'shorthand properties can be disabled with `transforms.conciseMethodProperty === false`',
+		description:
+			'shorthand properties can be disabled with `transforms.conciseMethodProperty === false`',
 		options: { transforms: { conciseMethodProperty: false } },
 		input: `var obj = { x, y, z () {} }`,
 		output: `var obj = { x, y, z () {} }`
 	},
 
 	{
-		description: 'computed properties can be disabled with `transforms.computedProperty === false`',
+		description:
+			'computed properties can be disabled with `transforms.computedProperty === false`',
 		options: { transforms: { computedProperty: false } },
 		input: `var obj = { [x]: 'x' }`,
 		output: `var obj = { [x]: 'x' }`
@@ -101,18 +104,30 @@ module.exports = [
 				console.log(JSON.stringify({['bar']:3}));
 		`,
 		output: `
+			var _obj, _obj$1;
+
 			if (1)
-				{ console.log(JSON.stringify(( _obj = {}, _obj['com'+'puted'] = 1, _obj['foo'] = 2, _obj )));
-					var _obj; }
+				{ console.log(JSON.stringify(( _obj = {}, _obj['com'+'puted'] = 1, _obj['foo'] = 2, _obj ))); }
 			else
-				{ console.log(JSON.stringify(( _obj$1 = {}, _obj$1['bar'] = 3, _obj$1 )));
-			var _obj$1; }
+				{ console.log(JSON.stringify(( _obj$1 = {}, _obj$1['bar'] = 3, _obj$1 ))); }
+		`
+	},
+
+	{
+		description: 'transpiles string-keyed properties after computed properties',
+
+		input: `
+			fn({['computed']:1, 'some-var':2, a: 3});
+		`,
+		output: `
+			var _obj;
+
+			fn(( _obj = {}, _obj['computed'] = 1, _obj['some-var'] = 2, _obj.a = 3, _obj ));
 		`
 	},
 
 	{
 		description: 'avoids shadowing free variables with method names (#166)',
-
 		input: `
 			let x = {
 				foo() { return foo },
@@ -125,5 +140,5 @@ module.exports = [
 				bar: function bar() {}
 			}
 		`
-	},
+	}
 ];

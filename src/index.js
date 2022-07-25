@@ -1,44 +1,51 @@
 import * as acorn from 'acorn';
 import acornJsx from 'acorn-jsx/inject';
-import acornObjectSpread from 'acorn-object-spread/inject';
+import acornDynamicImport from 'acorn-dynamic-import/lib/inject';
 import Program from './program/Program.js';
 import { features, matrix } from './support.js';
 import getSnippet from './utils/getSnippet.js';
 
-const { parse } = [
-	acornObjectSpread,
-	acornJsx
-].reduce( ( final, plugin ) => plugin( final ), acorn );
+const { parse } = [acornJsx, acornDynamicImport].reduce(
+	(final, plugin) => plugin(final),
+	acorn
+);
 
-const dangerousTransforms = [
-	'dangerousTaggedTemplateString',
-	'dangerousForOf'
-];
+const dangerousTransforms = ['dangerousTaggedTemplateString', 'dangerousForOf'];
 
-export function target ( target ) {
-	const targets = Object.keys( target );
-	let bitmask = targets.length ?
-		0b1111111111111111111111111111111 :
-		0b1000000000000000000000000000000;
+export function target(target) {
+	const targets = Object.keys(target);
+	let bitmask = targets.length
+		? 0b11111111111111111111
+		: 0b01000000000000000000;
 
-	Object.keys( target ).forEach( environment => {
-		const versions = matrix[ environment ];
-		if ( !versions ) throw new Error( `Unknown environment '${environment}'. Please raise an issue at https://gitlab.com/Rich-Harris/buble/issues` );
+	Object.keys(target).forEach(environment => {
+		const versions = matrix[environment];
+		if (!versions)
+			throw new Error(
+				`Unknown environment '${environment}'. Please raise an issue at https://github.com/Rich-Harris/buble/issues`
+			);
 
-		const targetVersion = target[ environment ];
-		if ( !( targetVersion in versions ) ) throw new Error( `Support data exists for the following versions of ${environment}: ${Object.keys( versions ).join( ', ')}. Please raise an issue at https://gitlab.com/Rich-Harris/buble/issues` );
-		const support = versions[ targetVersion ];
+		const targetVersion = target[environment];
+		if (!(targetVersion in versions))
+			throw new Error(
+				`Support data exists for the following versions of ${environment}: ${Object.keys(
+					versions
+				).join(
+					', '
+				)}. Please raise an issue at https://github.com/Rich-Harris/buble/issues`
+			);
+		const support = versions[targetVersion];
 
 		bitmask &= support;
 	});
 
-	let transforms = Object.create( null );
-	features.forEach( ( name, i ) => {
-		transforms[ name ] = !( bitmask & 1 << i );
+	let transforms = Object.create(null);
+	features.forEach((name, i) => {
+		transforms[name] = !(bitmask & (1 << i));
 	});
 
-	dangerousTransforms.forEach( name => {
-		transforms[ name ] = false;
+	dangerousTransforms.forEach(name => {
+		transforms[name] = false;
 	});
 
 	transforms.stripWith = false
@@ -69,24 +76,24 @@ export function transform ( source, options = {} ) {
 	let jsx = null;
 
 	try {
-		ast = parse( source, {
-			ecmaVersion: 8,
+		ast = parse(source, {
+			ecmaVersion: 9,
 			preserveParens: true,
 			sourceType: transforms.stripWith ? 'script' : 'module',
 			onComment: (block, text) => {
-				if ( !jsx ) {
-					let match = /@jsx\s+([^\s]+)/.exec( text );
-					if ( match ) jsx = match[1];
+				if (!jsx) {
+					let match = /@jsx\s+([^\s]+)/.exec(text);
+					if (match) jsx = match[1];
 				}
 			},
 			plugins: {
 				jsx: true,
-				objectSpread: true
+				dynamicImport: true
 			}
 		});
 		options.jsx = jsx || options.jsx;
-	} catch ( err ) {
-		err.snippet = getSnippet( source, err.loc );
+	} catch (err) {
+		err.snippet = getSnippet(source, err.loc);
 		err.toString = () => `${err.name}: ${err.message}\n${err.snippet}`;
 		throw err;
 	}

@@ -12,7 +12,8 @@ module.exports = [
 	},
 
 	{
-		description: 'transpiles an untagged template literal containing complex expressions',
+		description:
+			'transpiles an untagged template literal containing complex expressions',
 		input: 'var str = `foo${bar + baz}qux`;',
 		output: `var str = "foo" + (bar + baz) + "qux";`
 	},
@@ -36,17 +37,33 @@ module.exports = [
 	},
 
 	{
-		description: 'transpiles tagged template literals with `transforms.dangerousTaggedTemplateString = true`',
+		description:
+			'transpiles tagged template literals with `transforms.dangerousTaggedTemplateString = true`',
 		options: { transforms: { dangerousTaggedTemplateString: true } },
 		input: 'var str = x`y${(() => 42)()}`;',
-		output: `var str = x(["y", ""], (function () { return 42; })());`
+		output: `var templateObject = Object.freeze(["y", ""]);\nvar str = x(templateObject, (function () { return 42; })());`
 	},
 
 	{
-		description: 'transpiles tagged template literals with `transforms.dangerousTaggedTemplateString = true`',
+		description:
+			'transpiles tagged template literals with `transforms.dangerousTaggedTemplateString = true`',
 		options: { transforms: { dangerousTaggedTemplateString: true } },
 		input: 'var str = x`${(() => 42)()}y`;',
-		output: `var str = x(["", "y"], (function () { return 42; })());`
+		output: `var templateObject = Object.freeze(["", "y"]);\nvar str = x(templateObject, (function () { return 42; })());`
+	},
+
+	{
+		description: 'reuses quasi array for identical tagged template strings',
+		options: { transforms: { dangerousTaggedTemplateString: true } },
+		input: 'x`a${a}b`, x`a${b}b`, x`b${c}a`',
+		output: `var templateObject$1 = Object.freeze(["b", "a"]);\nvar templateObject = Object.freeze(["a", "b"]);\nx(templateObject, a), x(templateObject, b), x(templateObject$1, c)`
+	},
+
+	{
+		description: 'reuses quasi array for identical tagged template strings in strict mode',
+		options: { transforms: { dangerousTaggedTemplateString: true } },
+		input: '"use strict";\nx`a${a}b`, x`a${b}b`, x`b${c}a`',
+		output: `"use strict";\nvar templateObject$1 = Object.freeze(["b", "a"]);\nvar templateObject = Object.freeze(["a", "b"]);\nx(templateObject, a), x(templateObject, b), x(templateObject$1, c)`
 	},
 
 	{
@@ -62,7 +79,8 @@ module.exports = [
 	},
 
 	{
-		description: 'does not parenthesise template strings in arithmetic expressions',
+		description:
+			'does not parenthesise template strings in arithmetic expressions',
 		input: 'var str = `x${y}` + z; var str2 = `x${y}` * z;',
 		output: 'var str = "x" + y + z; var str2 = ("x" + y) * z;'
 	},
@@ -102,5 +120,11 @@ module.exports = [
 		description: 'concats expression with variable',
 		input: 'var str = `${a + b}${c}`;',
 		output: 'var str = "" + (a + b) + c;'
+	},
+
+	{
+		description: 'interpolations inside interpolations',
+		input: 'var string = `foo${`${bar}`}`',
+		output: `var string = "foo" + ("" + bar)`
 	}
 ];

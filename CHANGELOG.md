@@ -1,5 +1,82 @@
 # buble changelog
 
+## 0.19.3 (2018-02-13)
+
+* Make sure browser builds are actually valid ES5 (except for the modules build)
+
+## 0.19.2 (2018-02-12)
+
+* Correctly specify browser field in package.json ([#107](https://github.com/Rich-Harris/buble/issues/107))
+* Fix a compile error about using `super` outside of class methods
+* Fix transpiling rest properties
+
+## 0.19.1 (2018-02-10)
+
+* Fix transpiling let and const if arrow functions are not transpiled (i. e. node: 4)
+
+## 0.19.0 (2018-02-10)
+
+### Enhancements
+
+* Add support information for new environments
+* Add (pass-thru) support for aync generators and for-async-of
+* Add support for dynamic import ([#102](https://github.com/Rich-Harris/buble/pull/102))
+* Add support for JSX fragments ([#62](https://github.com/Rich-Harris/buble/issues/62))
+* Add unpkg build and transpile browser build for older environments ([#93](https://github.com/Rich-Harris/buble/issues/93))
+* Reuse tagged template quasis ([#67](https://github.com/Rich-Harris/buble/pull/67))
+* Transpile trailing commas in new expressions ([#63](https://github.com/Rich-Harris/buble/issues/63))
+* Add support for destructuring in for-in and for-of loop heads
+* Add support for destructuring in catch clause params
+* Add support for rest properties in assignments
+
+### Fixes
+
+* Don't remove commas in comments after the last argument ([#89](https://github.com/Rich-Harris/buble/issues/89))
+* Support transformations involving aliasing of variables in block scopes ([#60](https://github.com/Rich-Harris/buble/issues/60))
+* Evaluate expression only once with inline default pattern elements
+* Fix nested object and array patterns, rest properties and default values in for loop heads
+* Only put own properties in rest properties
+* Improve declaration of helper variables
+* Allow modification of mutable variables that shadow a const before declaration ([#59](https://github.com/Rich-Harris/buble/issues/59))
+* Correctly detect modification of immutable variables through destructuring assignments
+* In object methods, support destructuring declarations initialized with a variable having the same name as the method ([#86](https://github.com/Rich-Harris/buble/issues/86))
+* Fix properties with string literal keys after computed properties ([#91](https://github.com/Rich-Harris/buble/pull/91))
+* Fix methods after computed properties ([#101](https://github.com/Rich-Harris/buble/issues/101))
+* Fix short-hand generator methods
+* Fix template literals in array after spread element ([#105](https://github.com/Rich-Harris/buble/issues/105))
+* Fix arrow functions in array after spread element ([#100](https://github.com/Rich-Harris/buble/issues/100))
+* Fix arrow functions in new expression after spread element ([#100](https://github.com/Rich-Harris/buble/issues/100))
+* Restore decoding HTML entities in JSX ([#104](https://github.com/Rich-Harris/buble/issues/104))
+* Correct various entries in support matrix
+
+## 0.18.0
+
+* Allow anonymous functions and classes as default exports ([#37](https://github.com/Rich-Harris/buble/issues/37))
+* Handle non-breaking spaces in JSX ([#46](https://github.com/Rich-Harris/buble/issues/46))
+* Allow anonymous classes to be assigned to properties ([#33](https://github.com/Rich-Harris/buble/issues/33))
+* Add `trailingFunctionCommas` transformation ([#50](https://github.com/Rich-Harris/buble/issues/50))
+
+## 0.17.3
+
+* Move `chalk` to dependencies ([#35](https://github.com/Rich-Harris/buble/issues/35))
+
+## 0.17.2
+
+* Fix nested template literals regression ([#39](https://github.com/Rich-Harris/buble/issues/39))
+
+## 0.17.1
+
+* Error on nested rest elements ([#31](https://github.com/Rich-Harris/buble/pull/31))
+* Allow destructuring with computed properties ([#34](https://github.com/Rich-Harris/buble/pull/34))
+
+## 0.17.0
+
+* Update dependencies
+* Transpile arrow functions unconditionally if spread arguments need transpilation ([#22](https://github.com/Rich-Harris/buble/pull/22))
+* Better object spread support ([#25](https://github.com/Rich-Harris/buble/pull/25))
+* Rest properties ([#30](https://github.com/Rich-Harris/buble/pull/30))
+* Fix ([#24](https://github.com/Rich-Harris/buble/pull/24))
+
 ## 0.16.0
 
 * Allow truthy dash-cased props ([#2](https://github.com/Rich-Harris/buble/pull/2))
