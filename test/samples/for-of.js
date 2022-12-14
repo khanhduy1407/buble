@@ -13,8 +13,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles for-of with array assumption with `transforms.dangerousForOf`',
+		description: 'transpiles for-of with array assumption with `transforms.dangerousForOf`',
 		options: { transforms: { dangerousForOf: true } },
 
 		input: `
@@ -119,6 +118,7 @@ module.exports = [
 
 				if ( item.foo ) { continue; }
 			}`
+
 	},
 
 	{
@@ -223,51 +223,5 @@ module.exports = [
 
 				console.log(x, y);
 			}`
-	},
-
-	{
-		description: 'destructures assignment in forOf loop',
-		options: { transforms: { dangerousForOf: true } },
-
-		input: `
-			var x, y;
-			for ({x, y} of [{x: 1, y: 2}]) {
-				console.log(x, y);
-			}
-		`,
-
-		output: `
-			var x, y;
-			for (var i = 0, list = [{x: 1, y: 2}]; i < list.length; i += 1) {
-				var ref = list[i];
-				x = ref.x;
-				y = ref.y;
-
-				console.log(x, y);
-			}
-		`
-	},
-
-	{
-		description: 'destructures assignment in forOf loop with array pattern',
-		options: { transforms: { dangerousForOf: true } },
-
-		input: `
-			var x, y;
-			for ([x, y] of [[1, 2]]) {
-				console.log(x, y);
-			}
-		`,
-
-		output: `
-			var x, y;
-			for (var i = 0, list = [[1, 2]]; i < list.length; i += 1) {
-				var ref = list[i];
-				x = ref[0];
-				y = ref[1];
-
-				console.log(x, y);
-			}
-		`
 	}
 ];

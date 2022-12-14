@@ -171,12 +171,11 @@ module.exports = [
 			() => console.log( 'not printed' );`,
 
 		output: `
-			!function() { return console.log( 'not printed' ); };`
+			(function() { return console.log( 'not printed' ); });`
 	},
 
 	{
-		description:
-			'handles standalone arrow function expression statement within a function',
+		description: 'handles standalone arrow function expression statement within a function',
 
 		input: `
 			function no_op () {
@@ -185,25 +184,7 @@ module.exports = [
 
 		output: `
 			function no_op () {
-				!function() { return console.log( 'not printed' ); };
+				(function() { return console.log( 'not printed' ); });
 			}`
-	},
-
-	{
-		description:
-			'are transformed even if disabled if they have a transpiled spread parameter',
-
-		options: { transforms: { arrow: false, spreadRest: true } },
-
-		input: `
-				(...args) => console.log( args );`,
-
-		output: `
-				!function() {
-					var args = [], len = arguments.length;
-					while ( len-- ) args[ len ] = arguments[ len ];
-
-					return console.log( args );
-				};`
 	}
 ];

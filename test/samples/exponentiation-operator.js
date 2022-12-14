@@ -6,22 +6,19 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a simple reference',
+		description: 'transpiles an exponentiation assignment to a simple reference',
 		input: `x **= y`,
 		output: `x = Math.pow( x, y )`
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a simple parenthesized reference',
+		description: 'transpiles an exponentiation assignment to a simple parenthesized reference',
 		input: `( x ) **= y`,
 		output: `( x ) = Math.pow( x, y )`
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a rewritten simple reference',
+		description: 'transpiles an exponentiation assignment to a rewritten simple reference',
 
 		input: `
 			let x = 1;
@@ -41,8 +38,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a simple member expression',
+		description: 'transpiles an exponentiation assignment to a simple member expression',
 
 		input: `
 			foo.bar **= y;`,
@@ -52,22 +48,18 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a simple deep member expression',
+		description: 'transpiles an exponentiation assignment to a simple deep member expression',
 
 		input: `
 			foo.bar.baz **= y;`,
 
 		output: `
-			var object;
-
-			object = foo.bar;
+			var object = foo.bar;
 			object.baz = Math.pow( object.baz, y );`
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a simple computed member expression',
+		description: 'transpiles an exponentiation assignment to a simple computed member expression',
 
 		input: `
 			foo[ bar ] **= y;`,
@@ -77,57 +69,47 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a complex reference',
+		description: 'transpiles an exponentiation assignment to a complex reference',
 
 		input: `
 			foo[ bar() ] **= y;`,
 
 		output: `
-			var property;
-
-			property = bar();
+			var property = bar();
 			foo[property] = Math.pow( foo[property], y );`
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a contrivedly complex reference',
+		description: 'transpiles an exponentiation assignment to a contrivedly complex reference',
 
 		input: `
 			foo[ bar() ][ baz() ] **= y;`,
 
 		output: `
-			var property, object;
-
-			object = foo[ bar() ];
-			property = baz();
+			var object = foo[ bar() ];
+			var property = baz();
 			object[property] = Math.pow( object[property], y );`
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a contrivedly complex reference (that is not a top-level statement)',
+		description: 'transpiles an exponentiation assignment to a contrivedly complex reference (that is not a top-level statement)',
 
 		input: `
 			var baz = 1, lolwut = foo[ bar() ][ baz * 2 ] **= y;`,
 
 		output: `
-			var property, object;
-
+			var object, property;
 			var baz = 1, lolwut = ( object = foo[ bar() ], property = baz * 2, object[property] = Math.pow( object[property], y ) );`
 	},
 
 	{
-		description:
-			'transpiles an exponentiation assignment to a contrivedly complex reference with simple object (that is not a top-level statement)',
+		description: 'transpiles an exponentiation assignment to a contrivedly complex reference with simple object (that is not a top-level statement)',
 
 		input: `
 			var baz = 1, lolwut = foo[ bar() ] **= y;`,
 
 		output: `
 			var property;
-
 			var baz = 1, lolwut = ( property = bar(), foo[property] = Math.pow( foo[property], y ) );`
 	},
 
@@ -171,18 +153,16 @@ module.exports = [
 	},
 
 	{
-		description:
-			'handles assignment of exponentiation assignment to property with side effect',
+		description: 'handles assignment of exponentiation assignment to property with side effect',
 
 		input: `
 			x=a[bar()]**=2;
 		`,
 		output: `
 			var property;
-
 			x=( property = bar(), a[property]=Math.pow( a[property], 2 ) );
 		`
-	}
+	},
 
 	/* TODO: Test currently errors out with: TypeError: Cannot read property 'property' of null
 	{

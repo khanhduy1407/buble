@@ -22,12 +22,9 @@ import ImportDefaultSpecifier from './ImportDefaultSpecifier.js';
 import ImportSpecifier from './ImportSpecifier.js';
 import JSXAttribute from './JSXAttribute.js';
 import JSXClosingElement from './JSXClosingElement.js';
-import JSXClosingFragment from './JSXClosingFragment.js';
 import JSXElement from './JSXElement.js';
 import JSXExpressionContainer from './JSXExpressionContainer.js';
-import JSXFragment from './JSXFragment.js';
 import JSXOpeningElement from './JSXOpeningElement.js';
-import JSXOpeningFragment from './JSXOpeningFragment.js';
 import JSXSpreadAttribute from './JSXSpreadAttribute.js';
 import Literal from './Literal.js';
 import LoopStatement from './shared/LoopStatement.js';
@@ -36,7 +33,7 @@ import NewExpression from './NewExpression.js';
 import ObjectExpression from './ObjectExpression.js';
 import Property from './Property.js';
 import ReturnStatement from './ReturnStatement.js';
-import SpreadElement from './SpreadElement.js';
+import SpreadProperty from './SpreadProperty.js';
 import Super from './Super.js';
 import TaggedTemplateExpression from './TaggedTemplateExpression.js';
 import TemplateElement from './TemplateElement.js';
@@ -73,12 +70,9 @@ export default {
 	ImportSpecifier,
 	JSXAttribute,
 	JSXClosingElement,
-	JSXClosingFragment,
 	JSXElement,
 	JSXExpressionContainer,
-	JSXFragment,
 	JSXOpeningElement,
-	JSXOpeningFragment,
 	JSXSpreadAttribute,
 	Literal,
 	MemberExpression,
@@ -86,7 +80,7 @@ export default {
 	ObjectExpression,
 	Property,
 	ReturnStatement,
-	SpreadElement,
+	SpreadProperty,
 	Super,
 	TaggedTemplateExpression,
 	TemplateElement,

@@ -86,51 +86,6 @@ module.exports = [
 	},
 
 	{
-		description: 'disallows destructured reassignment to constants, short-hand property',
-		input: `
-			const x = 1;
-			({ x } = {});
-		`,
-		error: /x is read-only/
-	},
-
-	{
-		description: 'disallows destructured reassignment to constants, rest property',
-		input: `
-			const x = 1;
-			({ ...x } = {});
-		`,
-		error: /x is read-only/
-	},
-
-	{
-		description: 'disallows destructured reassignment to constants, renamed property',
-		input: `
-			const x = 1;
-			({ y: x } = {});
-		`,
-		error: /x is read-only/
-	},
-
-	{
-		description: 'disallows destructured reassignment to constants, array',
-		input: `
-			const x = 1;
-			([ x ] = []);
-		`,
-		error: /x is read-only/
-	},
-
-	{
-		description: 'disallows destructured reassignment to constants, rest element',
-		input: `
-			const x = 1;
-			([ ...x ] = []);
-		`,
-		error: /x is read-only/
-	},
-
-	{
 		description: 'disallows updates to constants',
 		input: `
 			const x = 1;
@@ -420,6 +375,7 @@ module.exports = [
 	},
 
 	{
+		skip: true,
 		description: 'deconflicts rest element declarations',
 
 		input: `
@@ -434,9 +390,7 @@ module.exports = [
 			var x;
 
 			if ( true ) {
-				var first = y[0];
-				var second = y[1];
-				var x$1 = y.slice(2);
+				var first = y[0], second = y[1], x$1 = y.slice( 2 );
 				console.log( x$1 );
 			}`
 	},
@@ -486,55 +440,5 @@ module.exports = [
 				a();
 				b();
 			}`
-	},
-
-	{
-		description: 'correctly recognizes shadowing of const variables by mutable variables declared after mutation',
-
-		input: `
-			const bar = "FAIL";
-			(function() {
-					function foo() {
-							--bar;
-							bar = ["fail", "PASS", "Fail"][bar];
-					}
-					let bar = 2;
-					foo();
-					console.log(bar);
-			}());
-		`,
-
-		output: `
-			var bar = "FAIL";
-			(function() {
-					function foo() {
-							--bar;
-							bar = ["fail", "PASS", "Fail"][bar];
-					}
-					var bar = 2;
-					foo();
-					console.log(bar);
-			}());
-		`
-	},
-
-	{
-		description: 'correctly transpiles if arrow functions are not transpiled',
-
-		options: { transforms: { arrow: false } },
-
-		input: `
-			var c;
-			if (true) {
-				let c = prop.end;
-				console.log(c);
-			}`,
-
-		output: `
-			var c;
-			if (true) {
-				var c$1 = prop.end;
-				console.log(c$1);
-			}`,
 	}
 ];

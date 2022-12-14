@@ -35,41 +35,10 @@ module.exports = [
 			};`,
 
 		output: `
-			var obj = {};
-			obj[a] = 1;
-			obj.b = 2;`
-	},
-
-	{
-		description: 'creates a computed property at start of literal with method afterwards',
-
-		input: `
 			var obj = {
-				[a]: 1,
-				b() {}
-			};`,
-
-		output: `
-			var obj = {};
-			obj[a] = 1;
-			obj.b = function b() {};`
-	},
-
-	{
-		description: 'creates a computed property at start of literal with generator method afterwards when transpiling methods is disabled',
-
-		options: { transforms: { conciseMethodProperty: false, generator: false } },
-
-		input: `
-			var obj = {
-				[a]: 1,
-				*b() {}
-			};`,
-
-		output: `
-			var obj = {};
-			obj[a] = 1;
-			obj.b = function* () {};`
+				b: 2
+			};
+			obj[a] = 1;`
 	},
 
 	{
@@ -100,10 +69,10 @@ module.exports = [
 
 		output: `
 			var obj = {
-				a: 1
+				a: 1,
+				c: 3
 			};
-			obj[b] = 2;
-			obj.c = 3;`
+			obj[b] = 2;`
 	},
 
 	{
@@ -120,12 +89,13 @@ module.exports = [
 			};`,
 
 		output: `
-			var obj = {};
+			var obj = {
+				b: 2,
+				e: 5
+			};
 			obj[a] = 1;
-			obj.b = 2;
 			obj[c] = 3;
 			obj[d] = 4;
-			obj.e = 5;
 			obj[f] = 6;`
 	},
 
@@ -136,9 +106,8 @@ module.exports = [
 			var a = 'foo', obj = { [a]: 'bar', x: 42 }, bar = obj.foo;`,
 
 		output: `
-			var _obj;
-
-			var a = 'foo', obj = ( _obj = {}, _obj[a] = 'bar', _obj.x = 42, _obj ), bar = obj.foo;`
+			var a = 'foo', obj = ( _obj = { x: 42 }, _obj[a] = 'bar', _obj ), bar = obj.foo;
+			var _obj;`
 	},
 
 	{
@@ -169,9 +138,8 @@ module.exports = [
 			call({ [a]: 5 });`,
 
 		output: `
-			var _obj;
-
-			call(( _obj = {}, _obj[a] = 5, _obj ));`
+			call(( _obj = {}, _obj[a] = 5, _obj ));
+			var _obj;`
 	},
 
 	{
@@ -192,8 +160,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'creates a computed method with a non-identifier expression (#78)',
+		description: 'creates a computed method with a non-identifier expression (#78)',
 
 		input: `
 			var obj = {
@@ -210,8 +177,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'does not require space before parens of computed method (#82)',
+		description: 'does not require space before parens of computed method (#82)',
 
 		input: `
 			var obj = {
@@ -228,8 +194,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'supports computed shorthand function with object spread in body (#135)',
+		description: 'supports computed shorthand function with object spread in body (#135)',
 
 		options: {
 			objectAssign: 'Object.assign'
@@ -252,44 +217,15 @@ module.exports = [
 	},
 
 	{
-		description:
-			'object literal with computed property within arrow expression (#126)',
+		description: 'object literal with computed property within arrow expression (#126)',
 
 		input: `
 			foo => bar({[x - y]: obj});
 		`,
 		output: `
-			!function(foo) {
-				var _obj;
-
-				return bar(( _obj = {}, _obj[x - y] = obj, _obj ));
-			};
+			(function(foo) { return bar(( _obj = {}, _obj[x - y] = obj, _obj ))
+				var _obj;; });
 		`
 	},
 
-	{
-		description: 'Supports nested computed properties (#51)',
-
-		input: `
-			(function () { return { [key]: { [key]: val } } })
-		`,
-		output: `
-			(function () {
-			var _obj, _obj$1;
- return ( _obj$1 = {}, _obj$1[key] = ( _obj = {}, _obj[key] = val, _obj ), _obj$1 ) })
-		`
-	},
-
-	{
-		description: 'Puts helper variables in correct scope',
-
-		input: `
-			((x) => {var obj = 2; console.log([{[x]: 1}, obj]);})(3);
-		`,
-		output: `
-			(function (x) {
-			var _obj;
-var obj = 2; console.log([( _obj = {}, _obj[x] = 1, _obj ), obj]);})(3);
-		`
-	}
 ];

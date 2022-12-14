@@ -24,23 +24,20 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles a spread operator in a method call with other arguments',
+		description: 'transpiles a spread operator in a method call with other arguments',
 		input: `var max = Math.max( 0, ...values );`,
 		output: `var max = Math.max.apply( Math, [ 0 ].concat( values ) );`
 	},
 
 	{
-		description:
-			'transpiles a spread operator in a method call of an expression',
+		description: 'transpiles a spread operator in a method call of an expression',
 
 		input: `
 			( foo || bar ).baz( ...values );`,
 
 		output: `
-			var ref;
-
-			(ref = ( foo || bar )).baz.apply( ref, values );`
+			(ref = ( foo || bar )).baz.apply( ref, values );
+			var ref;`
 	},
 
 	{
@@ -52,15 +49,13 @@ module.exports = [
 			}`,
 		output: `
 			function a( args ) {
-				var ref;
-
 				return (ref = this).go.apply( ref, args );
+				var ref;
 			}`
 	},
 
 	{
-		description:
-			'transpiles a spread operator in a call in an arrow function using this (#115)',
+		description: 'transpiles a spread operator in a call in an arrow function using this (#115)',
 
 		input: `
 			function foo(...args) {
@@ -86,18 +81,16 @@ module.exports = [
 				while ( len-- ) args[ len ] = arguments[ len ];
 
 				return Domain.run(function () {
-					var ref;
-
 					return (ref = this$1).go.apply(ref, args);
+					var ref;
 				});
 			}
 			function bar(args) {
 				var this$1 = this;
 
 				return Domain.run(function () {
-					var ref;
-
 					return (ref = this$1).go.apply(ref, args);
+					var ref;
 				});
 			}
 			function baz() {
@@ -105,17 +98,15 @@ module.exports = [
 				var this$1 = this;
 
 				return Domain.run(function () {
-					var ref;
-
 					return (ref = this$1).go.apply(ref, arguments$1);
+					var ref;
 				});
 			}
 		`
 	},
 
 	{
-		description:
-			'transpiles a spread operator in a new call in an arrow function using this',
+		description: 'transpiles a spread operator in a new call in an arrow function using this',
 
 		input: `
 			function foo(...args) {
@@ -158,15 +149,14 @@ module.exports = [
 				while ( i-- ) argsArray[i] = arguments[i];
 
 				return Domain.run(function () {
-					return new (Function.prototype.bind.apply( this$1.Test, [ null ].concat( argsArray) ));
+					return new (Function.prototype.bind.apply( this$1.Test, [ null ].concat( arguments$1) ));
 				});
 			}
 		`
 	},
 
 	{
-		description:
-			'transpiles a spread operator in an expression method call within an if',
+		description: 'transpiles a spread operator in an expression method call within an if',
 
 		input: `
 			var result;
@@ -175,17 +165,15 @@ module.exports = [
 			process( result );`,
 
 		output: `
-			var ref$1;
-
 			var result;
 			if ( ref )
 				{ result = (ref$1 = expr()).baz.apply( ref$1, values ); }
-			process( result );`
+			process( result );
+			var ref$1;`
 	},
 
 	{
-		description:
-			'transpiles spread operators in expression method calls within a function',
+		description: 'transpiles spread operators in expression method calls within a function',
 
 		input: `
 			function foo() {
@@ -196,12 +184,12 @@ module.exports = [
 			}`,
 		output: `
 			function foo() {
-				var ref$1, ref$2;
-
 				stuff();
 				if ( ref )
 					{ return (ref$1 = expr()).baz.apply( ref$1, values ); }
 				return (ref$2 = (up || down)).bar.apply( ref$2, values );
+				var ref$1;
+				var ref$2;
 			}`
 	},
 
@@ -217,12 +205,12 @@ module.exports = [
 			}`,
 		output: `
 			function ref() {
-				var ref, ref$2;
-
 				stuff();
 				if ( ref$1 )
 					{ return (ref = expr()).baz.apply( ref, [ a ].concat( values, [(ref$2 = (up || down)).bar.apply( ref$2, [ c ].concat( values, [d] ) )] ) ); }
 				return other();
+				var ref;
+				var ref$2;
 			}`
 	},
 
@@ -249,19 +237,17 @@ module.exports = [
 				prepare: function prepare() {
 					var i = arguments.length, argsArray = Array(i);
 					while ( i-- ) argsArray[i] = arguments[i];
-					var ref;
 
 					return (ref = this.add).bind.apply(ref, [ this ].concat( argsArray ))
+					var ref;
 				}
 			}`
 	},
 
 	{
-		description:
-			'transpiles spread operators with template literals (issue #99)',
+		description: 'transpiles spread operators with template literals (issue #99)',
 		input: 'console.log( `%s ${label}:`, `${color}`, ...args );',
-		output:
-			'console.log.apply( console, [ ("%s " + label + ":"), ("" + color) ].concat( args ) );'
+		output: 'console.log.apply( console, [ ("%s " + label + ":"), ("" + color) ].concat( args ) );'
 	},
 
 	{
@@ -271,8 +257,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles a spread operator in a function call with other arguments',
+		description: 'transpiles a spread operator in a function call with other arguments',
 		input: `sprintf( str, ...values );`,
 		output: `sprintf.apply( void 0, [ str ].concat( values ) );`
 	},
@@ -284,16 +269,14 @@ module.exports = [
 	},
 
 	{
-		description:
-			'can be disabled in array expressions `transforms.spreadRest: false`',
+		description: 'can be disabled in array expressions `transforms.spreadRest: false`',
 		options: { transforms: { spreadRest: false } },
 		input: `var chars = [ ...string ]`,
 		output: `var chars = [ ...string ]`
 	},
 
 	{
-		description:
-			'can be disabled in call expressions with `transforms.spreadRest: false`',
+		description: 'can be disabled in call expressions with `transforms.spreadRest: false`',
 		options: { transforms: { spreadRest: false } },
 		input: `var max = Math.max( ...values );`,
 		output: `var max = Math.max( ...values );`
@@ -306,8 +289,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles multiple spread operators in an array with trailing comma',
+		description: 'transpiles multiple spread operators in an array with trailing comma',
 		input: `var arr = [ ...a, ...b, ...c, ];`,
 		output: `var arr = a.concat( b, c );`
 	},
@@ -319,8 +301,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles mixture of spread and non-spread elements in array with trailing comma',
+		description: 'transpiles mixture of spread and non-spread elements in array with trailing comma',
 		input: `var arr = [ ...a, b, ...c, d, ];`,
 		output: `var arr = a.concat( [b], c, [d] );`
 	},
@@ -389,8 +370,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles mixture of spread and non-spread operators in function call',
+		description: 'transpiles mixture of spread and non-spread operators in function call',
 		input: `var max = Math.max( ...a, b, ...c, d );`,
 		output: `var max = Math.max.apply( Math, a.concat( [b], c, [d] ) );`
 	},
@@ -532,11 +512,8 @@ module.exports = [
 		output: `
 			function foo (x) {
 				if ( x )
-					{ return function (ref) {
-						var ref$1;
-
-						return (ref$1 = (bar || baz)).Test.apply( ref$1, [ ref ].concat( x ) );
-						}; }
+					{ return function (ref) { return (ref$1 = (bar || baz)).Test.apply( ref$1, [ ref ].concat( x ) )
+						var ref$1;; }; }
 			}
 		`
 	},
@@ -557,7 +534,7 @@ module.exports = [
 				while ( i-- ) argsArray[i] = arguments[i];
 
 				if ( x )
-					{ return function (ref) { return new (Function.prototype.bind.apply( (bar || baz).Test, [ null ].concat( [ref], argsArray ) )); }; }
+					{ return function (ref) { return new (Function.prototype.bind.apply( (bar || baz).Test, [ null ].concat( [ref], arguments$1 ) )); }; }
 			}
 		`
 	},
@@ -578,44 +555,10 @@ module.exports = [
 				while ( i-- ) argsArray[i] = arguments[i];
 
 				if ( x )
-					{ return function (ref) {
-						var ref$1;
-
-						return (ref$1 = (bar || baz)).Test.apply( ref$1, [ ref ].concat( arguments$1 ) );
-						}; }
+					{ return function (ref) { return (ref$1 = (bar || baz)).Test.apply( ref$1, [ ref ].concat( arguments$1 ) )
+						var ref$1;; }; }
 			}
 		`
 	},
 
-	{
-		description: 'transpiles spread with template literal afterwards',
-
-		input: `
-			[...f(b), "n"];
-			[...f(b), 'n'];
-			[...f(b), \`n\`];
-		`,
-
-		output: `
-			f(b).concat( ["n"]);
-			f(b).concat( ['n']);
-			f(b).concat( ["n"]);
-		`
-	},
-
-	{
-		description: 'transpiles spread with arrow function afterwards',
-
-		input: `[...A, () => 'B']`,
-
-		output: `A.concat( [function () { return 'B'; }])`
-	},
-
-	{
-		description: 'transpiles spread in new with arrow function afterwards',
-
-		input: `new X(...A, () => 'B')`,
-
-		output: `new (Function.prototype.bind.apply( X, [ null ].concat( A, [function () { return 'B'; }]) ))`
-	}
 ];

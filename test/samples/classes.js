@@ -40,8 +40,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles a class declaration without a constructor function',
+		description: 'transpiles a class declaration without a constructor function',
 
 		input: `
 			class Foo {
@@ -344,8 +343,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles an anonymous class expression with a non-constructor method',
+		description: 'transpiles an anonymous class expression with a non-constructor method',
 
 		input: `
 			var Foo = class {
@@ -363,29 +361,6 @@ module.exports = [
 				};
 
 				return Foo;
-			}());`
-	},
-
-	{
-		description:
-			'transpiles an anonymous class expression that is assigned to a property',
-
-		input: `
-			const q = {};
-
-			q.a = class {
-				c () {}
-			};`,
-
-		output: `
-			var q = {};
-
-			q.a = (function () {
-				function a () {}
-
-				a.prototype.c = function c () {};
-
-				return a;
 			}());`
 	},
 
@@ -681,8 +656,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'verify deindent() does not corrupt string literals in class methods (#159)',
+		description: 'verify deindent() does not corrupt string literals in class methods (#159)',
 
 		input: `
 			class Foo {
@@ -837,8 +811,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'uses correct indentation for inserted statements in constructor (#39)',
+		description: 'uses correct indentation for inserted statements in constructor (#39)',
 
 		input: `
 			class Foo {
@@ -881,8 +854,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'uses correct indentation for inserted statements in subclass constructor (#39)',
+		description: 'uses correct indentation for inserted statements in subclass constructor (#39)',
 
 		input: `
 			class Foo extends Bar {
@@ -1066,7 +1038,7 @@ module.exports = [
 
 			Foo.prototype.catch = function catch$1 () {
 				// code goes here
-			};`
+			};`,
 	},
 
 	{
@@ -1141,8 +1113,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'static methods with computed names with varied spacing (#139)',
+		description: 'static methods with computed names with varied spacing (#139)',
 
 		input: `
 			class B {
@@ -1192,8 +1163,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'static methods with numeric or string names with varied spacing (#139)',
+		description: 'static methods with numeric or string names with varied spacing (#139)',
 
 		input: `
 			class D {
@@ -1226,7 +1196,7 @@ module.exports = [
 			X.prototype.foo = function foo$1 () { return foo };
 			X.prototype.bar = function bar () {};
 		`
-	}
+	},
 
 	// TODO more tests. e.g. getters and setters.
 	// 'super.*' is not allowed before super()

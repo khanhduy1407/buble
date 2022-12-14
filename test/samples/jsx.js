@@ -136,7 +136,7 @@ module.exports = [
 		input: `
 			<h1>
 				Hello {name}
-				!${'      '}
+				!${"      "}
 				It's  nice to meet you
 			</h1>`,
 		output: `
@@ -153,12 +153,6 @@ module.exports = [
 		description: 'transpiles JSX tag without value',
 		input: `var div = <div contentEditable />;`,
 		output: `var div = React.createElement( 'div', { contentEditable: true });`
-	},
-
-	{
-		description: 'transpiles JSX fragments',
-		input: `var divs = <><div contentEditable /><div /></>;`,
-		output: `var divs = React.createElement( React.Fragment, null, React.createElement( 'div', { contentEditable: true }), React.createElement( 'div', null ) );`
 	},
 
 	{
@@ -183,8 +177,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles mixed JSX spread attributes ending in spread with custom Object.assign',
+		description: 'transpiles mixed JSX spread attributes ending in spread with custom Object.assign',
 		options: {
 			objectAssign: 'angular.extend'
 		},
@@ -193,8 +186,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'transpiles mixed JSX spread attributes ending in other values',
+		description: 'transpiles mixed JSX spread attributes ending in other values',
 		options: {
 			objectAssign: 'Object.assign'
 		},
@@ -277,35 +269,6 @@ module.exports = [
 		`,
 		output: `
 			React.createElement( Thing, { 'data-foo': true })
-		`
-	},
-
-	{
-		description: 'handles non-breaking white-space entities',
-
-		input: `
-			<div>
-				<a>1</a>&nbsp;
-				&nbsp;
-			</div>
-		`,
-		output: `
-			React.createElement( 'div', null,
-				React.createElement( 'a', null, "1" ), "&nbsp; &nbsp;")
-		`
-	},
-
-	{
-		description: 'transpiles entities',
-
-		input: `
-			<div>
-				<a>1&lt;</a>&nbsp;
-			</div>
-		`,
-		output: `
-			React.createElement( 'div', null,
-				React.createElement( 'a', null, "1<" ), "&nbsp;")
 		`
 	}
 ];

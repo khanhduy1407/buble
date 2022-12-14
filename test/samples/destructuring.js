@@ -87,16 +87,14 @@ module.exports = [
 	},
 
 	{
-		description:
-			'can be disabled in declarations with `transforms.destructuring === false`',
+		description: 'can be disabled in declarations with `transforms.destructuring === false`',
 		options: { transforms: { destructuring: false } },
 		input: `var { x, y } = point;`,
 		output: `var { x, y } = point;`
 	},
 
 	{
-		description:
-			'can be disabled in function parameters with `transforms.parameterDestructuring === false`',
+		description: 'can be disabled in function parameters with `transforms.parameterDestructuring === false`',
 		options: { transforms: { parameterDestructuring: false } },
 		input: `function foo ({ x, y }) {}`,
 		output: `function foo ({ x, y }) {}`
@@ -142,8 +140,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'does not destructure variable declarations intelligently (#53)',
+		description: 'does not destructure variable declarations intelligently (#53)',
 
 		input: `
 			var { foo: bar, baz } = obj;
@@ -207,8 +204,7 @@ module.exports = [
 	},
 
 	{
-		description:
-			'default values in destructured object parameter with a default value (#37)',
+		description: 'default values in destructured object parameter with a default value (#37)',
 
 		input: `
 			function foo ({ arg1 = 123, arg2 = 456 } = {}) {
@@ -343,9 +339,8 @@ module.exports = [
 			({ [FirstProp]: one, [SecondProp]: two = 'Too', 3: three, Fore: four } = x);
 		`,
 		output: `
-			var assign;
-
 			var one, two, three, four;
+			var assign;
 			((assign = x, one = assign[FirstProp], two = assign[SecondProp], two = two === void 0 ? 'Too' : two, three = assign[3], four = assign.Fore));
 		`
 	},
@@ -469,11 +464,10 @@ module.exports = [
 			console.log(a, b, c, d);
 		`,
 		output: `
-			var assign, assign_slice_1_, assign_slice_1_2, assign_slice_1_2_s;
-
 			var x = [1, 2, {r: 9}, {s: ["table"]} ];
 			var a, b, c, d;
-			((assign = x, a = assign[0], assign_slice_1_ = assign.slice(1), b = assign_slice_1_[1].r, assign_slice_1_2 = assign_slice_1_[2], c = assign_slice_1_2.r, c = c === void 0 ? "nothing" : c, assign_slice_1_2_s = assign_slice_1_2.s, assign_slice_1_2_s = assign_slice_1_2_s === void 0 ? "nope" : assign_slice_1_2_s, d = assign_slice_1_2_s[0]));
+			var assign, array, obj, temp;
+			((assign = x, a = assign[0], array = assign.slice(1), b = array[1].r, obj = array[2], c = obj.r, c = c === void 0 ? "nothing" : c, temp = obj.s, temp = temp === void 0 ? "nope" : temp, d = temp[0]));
 			console.log(a, b, c, d);
 		`
 	},
@@ -513,18 +507,15 @@ module.exports = [
 			[x, y] = [1, 2];`,
 		output: `
 			var assign;
-
 			(assign = [1, 2], x = assign[0], y = assign[1]);`
 	},
 
 	{
-		description:
-			'transpiles destructuring assignment of an array with a default value',
+		description: 'transpiles destructuring assignment of an array with a default value',
 		input: `
 			[x = 4, y] = [1, 2];`,
 		output: `
 			var assign;
-
 			(assign = [1, 2], x = assign[0], x = x === void 0 ? 4 : x, y = assign[1]);`
 	},
 
@@ -534,30 +525,25 @@ module.exports = [
 			[[x], y] = [1, 2];`,
 		output: `
 			var assign;
-
 			(assign = [1, 2], x = assign[0][0], y = assign[1]);`
 	},
 
 	{
-		description:
-			'transpiles nested destructuring assignment of an array without evaluating a memberexpr twice',
+		description: 'transpiles nested destructuring assignment of an array without evaluating a memberexpr twice',
 		input: `
 			[[x, z], y] = [1, 2];`,
 		output: `
-			var assign, assign_0;
-
-			(assign = [1, 2], assign_0 = assign[0], x = assign_0[0], z = assign_0[1], y = assign[1]);`
+			var assign, array;
+			(assign = [1, 2], array = assign[0], x = array[0], z = array[1], y = assign[1]);`
 	},
 
 	{
-		description:
-			'transpiles nested destructuring assignment of an array with a default',
+		description: 'transpiles nested destructuring assignment of an array with a default',
 		input: `
 			[[x] = [], y] = [1, 2];`,
 		output: `
-			var assign, assign_0;
-
-			(assign = [1, 2], assign_0 = assign[0], assign_0 = assign_0 === void 0 ? [] : assign_0, x = assign_0[0], y = assign[1]);`
+			var assign, temp;
+			(assign = [1, 2], temp = assign[0], temp = temp === void 0 ? [] : temp, x = temp[0], y = assign[1]);`
 	},
 
 	{
@@ -566,7 +552,6 @@ module.exports = [
 			[x, y.z] = [1, 2];`,
 		output: `
 			var assign;
-
 			(assign = [1, 2], x = assign[0], y.z = assign[1]);`
 	},
 
@@ -575,9 +560,8 @@ module.exports = [
 		input: `
 			[x, y.z = 3] = [1, 2];`,
 		output: `
-			var assign, assign_1;
-
-			(assign = [1, 2], x = assign[0], assign_1 = assign[1], assign_1 = assign_1 === void 0 ? 3 : assign_1, y.z = assign_1);`
+			var assign, temp;
+			(assign = [1, 2], x = assign[0], temp = assign[1], temp = temp === void 0 ? 3 : temp, y.z = temp);`
 	},
 
 	{
@@ -586,18 +570,15 @@ module.exports = [
 			({x, y} = {x: 1});`,
 		output: `
 			var assign;
-
 			((assign = {x: 1}, x = assign.x, y = assign.y));`
 	},
 
 	{
-		description:
-			'transpiles destructuring assignment of an object where key and pattern names differ',
+		description: 'transpiles destructuring assignment of an object where key and pattern names differ',
 		input: `
 			({x, y: z} = {x: 1});`,
 		output: `
 			var assign;
-
 			((assign = {x: 1}, x = assign.x, z = assign.y));`
 	},
 
@@ -607,18 +588,15 @@ module.exports = [
 			({x, y: {z}} = {x: 1});`,
 		output: `
 			var assign;
-
 			((assign = {x: 1}, x = assign.x, z = assign.y.z));`
 	},
 
 	{
-		description:
-			'transpiles destructuring assignment of an object with a default value',
+		description: 'transpiles destructuring assignment of an object with a default value',
 		input: `
 			({x, y = 4} = {x: 1});`,
 		output: `
 			var assign;
-
 			((assign = {x: 1}, x = assign.x, y = assign.y, y = y === void 0 ? 4 : y));`
 	},
 
@@ -627,18 +605,16 @@ module.exports = [
 		input: `
 			({x, y: {z, q}} = {x: 1});`,
 		output: `
-			var assign, assign_y;
-
-			((assign = {x: 1}, x = assign.x, assign_y = assign.y, z = assign_y.z, q = assign_y.q));`
+			var assign, obj;
+			((assign = {x: 1}, x = assign.x, obj = assign.y, z = obj.z, q = obj.q));`
 	},
 
 	{
-		description: "doesn't create an object temporary unless necessary",
+		description: 'doesn\'t create an object temporary unless necessary',
 		input: `
 			({x, y: {z}} = {x: 1});`,
 		output: `
 			var assign;
-
 			((assign = {x: 1}, x = assign.x, z = assign.y.z));`
 	},
 
@@ -650,9 +626,8 @@ module.exports = [
 				baz();
 			}`,
 		output: `
-			var assign;
-
 			foo();
+			var assign;
 			if ( bar((assign = [1, 2], x = assign[0], y = assign[1], assign)) ) {
 				baz();
 			}`
@@ -667,7 +642,6 @@ module.exports = [
 		output: `
 			function foo() {
 				var assign;
-
 				(assign = [1, 2], x = assign[0], y = assign[1]);
 			}`
 	},
@@ -701,12 +675,11 @@ module.exports = [
 			] = [ "ok" ];
 		`,
 		output: `
-			var _obj;
-
 			var ref = [ "ok" ];
 			var a = ref[0]; if ( a === void 0 ) a = "A" + (baz() - 4);
 			var c = ref[2]; if ( c === void 0 ) c = (function (x) { return -x; });
 			var d = ref[3]; if ( d === void 0 ) d = (( _obj = { r: 5 }, _obj[h()] = i, _obj ));
+			var _obj;
 		`
 	},
 
@@ -722,12 +695,11 @@ module.exports = [
 			} = { b: 3 };
 		`,
 		output: `
-			var _obj;
-
 			var ref = { b: 3 };
 			var a = ref.a; if ( a === void 0 ) a = "A" + (baz() - 4);
 			var c = ref.c; if ( c === void 0 ) c = (function (x) { return -x; });
 			var d = ref.d; if ( d === void 0 ) d = (( _obj = { r: 5 }, _obj[1 + 1] = 2, _obj[h()] = i, _obj ));
+			var _obj;
 		`
 	},
 
@@ -745,17 +717,15 @@ module.exports = [
 			console.log( [ a, b ] = c );
 		`,
 		output: `
-			var assign;
-
 			var Point = function Point () {};
 
 			Point.prototype.set = function set ( array ) {
-					var assign;
-
-				return (assign = array, this.x = assign[0], this.y = assign[1], assign);
+				var assign;
+					return (assign = array, this.x = assign[0], this.y = assign[1], assign);
 			};
 
 			var a, b, c = [ 1, 2, 3 ];
+			var assign;
 			console.log( (assign = c, a = assign[0], b = assign[1], assign) );
 		`
 	},
@@ -774,107 +744,17 @@ module.exports = [
 			[ a, b ] = c;
 		`,
 		output: `
-			var assign;
-
 			var Point = function Point () {};
 
 			Point.prototype.set = function set ( array ) {
-					var assign;
-
-				(assign = array, this.x = assign[0], this.y = assign[1]);
+				var assign;
+					(assign = array, this.x = assign[0], this.y = assign[1]);
 			};
 
 			var a, b, c = [ 1, 2, 3 ];
+			var assign;
 			(assign = c, a = assign[0], b = assign[1]);
 		`
 	},
 
-	{
-		description: 'destructures with computed property',
-
-		input: `
-			const { a, b } = { ['a']: 1 };
-		`,
-
-		output: `
-			var _obj;
-
-			var ref = ( _obj = {}, _obj['a'] = 1, _obj );
-			var a = ref.a;
-			var b = ref.b;
-		`
-	},
-
-	{
-		description: 'destructures within block scope',
-
-		input: `
-			if (true) {
-				let [[a, b]] = [[1, 2]];
-			}
-		`,
-
-		output: `
-			if (true) {
-				var ref = [[1, 2]];
-				var ref_0 = ref[0];
-				var a = ref_0[0];
-				var b = ref_0[1];
-			}
-		`
-	},
-
-	{
-		description: 'destructures rewritten block scope variables',
-
-		input: `
-			let x;
-			if (maybe) {
-				let x;
-				({ x } = { x: 3 });
-				[ x ] = [ 3 ];
-			}`,
-
-		output: `
-			var assign, assign$1;
-
-			var x;
-			if (maybe) {
-				var x$1;
-				((assign = { x: 3 }, x$1 = assign.x));
-				(assign$1 = [ 3 ], x$1 = assign$1[0]);
-			}`
-	},
-
-	{
-		description: 'destructures try catch parameters',
-
-		input: `
-			try {} catch ({message}) {
-			}`,
-
-		output: `
-			try {} catch (ref) {
-				var message = ref.message;
-
-			}`
-	},
-
-	{
-		description: 'destructures parameters with same name as function',
-
-		input: `
-			const a = {
-				options (options) {
-					const { input } = options;
-				}
-			}`,
-
-		output: `
-			var a = {
-				options: function options (options$1) {
-					var input = options$1.input;
-				}
-			}`
-	}
 ];

@@ -32,8 +32,6 @@ function render () {
 function render () {
   var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
     return _h('div', _vm.items.map(function (item) {
-      var _obj;
-
       return _h('p', {
         class: [_vm.a, _vm.b + 'c', _vm.c ? _vm.d : item.e],
         style: ( _obj = { color: _vm.color, item: item }, _obj[_vm.prop] = true, _obj ),
@@ -53,27 +51,9 @@ function render () {
 
         return _h('p', [a, b, c])
       }))
+      var _obj;
     }))
 
-}
-`
-  },
-  {
-    description: 'strip with w/ single line if',
-    options: {
-      transforms: { stripWith: true },
-      objectAssign: 'Object.assign'
-    },
-    input: `
-function render() {
-  with(this){
-    if (true) return;text;}
-}
-`,
-    output: `
-function render() {
-  var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-    if (true) { return; }_vm.text;
 }
 `
   }
